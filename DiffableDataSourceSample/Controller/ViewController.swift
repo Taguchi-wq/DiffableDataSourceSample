@@ -91,7 +91,7 @@ class ViewController: UIViewController {
 extension ViewController {
     
     private func setupDataSource() {
-        let labelCell = UICollectionView.CellRegistration<LabelCell, Category> {
+        let categoryCell = UICollectionView.CellRegistration<CategoryCell, Category> {
             (cell, indexPath, category) in
             cell.label.text = category.name
             cell.backgroundColor = .systemBlue
@@ -106,7 +106,7 @@ extension ViewController {
         dataSource = UICollectionViewDiffableDataSource<Section, AnyHashable>(collectionView: collectionView) {
             (collectionView, indexPath, item) -> UICollectionViewCell? in
             if let category = item as? Category {
-                return collectionView.dequeueConfiguredReusableCell(using: labelCell, for: indexPath, item: category)
+                return collectionView.dequeueConfiguredReusableCell(using: categoryCell, for: indexPath, item: category)
             }
             
             if let product = item as? Product {
@@ -201,7 +201,8 @@ extension ViewController {
         
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
-            subitem: item, count: 2
+            subitem: item,
+            count: 2
         )
 
         let section = NSCollectionLayoutSection(group: group)
@@ -213,15 +214,13 @@ extension ViewController {
     
 }
 
+
+// MARK: - UICollectionViewDelegate
 extension ViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let category = dataSource.itemIdentifier(for: indexPath) as? Category {
             performFilterQuery(with: category.name)
-        }
-        
-        if let product = dataSource.itemIdentifier(for: indexPath) as? Product {
-            print(product.name)
         }
     }
     

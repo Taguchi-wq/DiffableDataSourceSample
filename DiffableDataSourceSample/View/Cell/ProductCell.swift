@@ -8,6 +8,7 @@
 import UIKit
 
 class ProductCell: UICollectionViewCell {
+    
     let label = UILabel()
     
     override init(frame: CGRect) {

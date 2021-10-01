@@ -1,5 +1,5 @@
 //
-//  LabelCell.swift
+//  CategoryCell.swift
 //  DiffableDataSourceSample
 //
 //  Created by cmStudent on 2021/10/01.
@@ -7,9 +7,10 @@
 
 import UIKit
 
-class LabelCell: UICollectionViewCell {
+class CategoryCell: UICollectionViewCell {
+    
     let label = UILabel()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -22,7 +23,8 @@ class LabelCell: UICollectionViewCell {
     
 }
 
-extension LabelCell {
+extension CategoryCell {
+    
     private func setupLabel() {
         label.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(label)
@@ -36,4 +38,5 @@ extension LabelCell {
             label.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
+    
 }
