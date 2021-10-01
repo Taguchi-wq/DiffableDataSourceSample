@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDelegate {
+class ViewController: UIViewController {
     
     // MARK: - Enums
     private enum Section: CaseIterable {
@@ -21,7 +21,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
     
     
     // MARK: - Properties
-    private var categories: [Category]  = []
+    private var categories: [Category] = []
     private var products: [Product] = []
     private var dataSource: UICollectionViewDiffableDataSource<Section, AnyHashable>! = nil
     
@@ -34,7 +34,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         setupDataSource()
         appendProducts()
         appendCategory()
-        performCategoryQuery()
+        performQuery()
     }
     
     
@@ -42,28 +42,45 @@ class ViewController: UIViewController, UICollectionViewDelegate {
     private func appendProducts() {
         products = [
             Product(name: "イス"),
-            Product(name: "デーブル"),
+            Product(name: "テーブル"),
+            Product(name: "テーブル"),
             Product(name: "ソファ"),
             Product(name: "カーペット"),
             Product(name: "カーテン"),
-            Product(name: "タンス")
+            Product(name: "タンス"),
+            Product(name: "イス"),
+            Product(name: "テーブル"),
+            Product(name: "ソファ"),
+            Product(name: "カーペット"),
+            Product(name: "カーテン"),
+            Product(name: "タンス"),
+            Product(name: "イス"),
+            Product(name: "テーブル"),
+            Product(name: "ソファ"),
+            Product(name: "カーペット"),
+            Product(name: "カーテン"),
+            Product(name: "タンス"),
+            Product(name: "カーペット"),
+            Product(name: "イス"),
+            Product(name: "タンス"),
+            Product(name: "テーブル"),
+            Product(name: "タンス"),
         ]
     }
     
     private func appendCategory() {
         categories = [
-            Category(name: "one"),
-            Category(name: "two"),
-            Category(name: "three"),
-            Category(name: "four"),
-            Category(name: "five"),
-            Category(name: "six"),
-            Category(name: "seven"),
-            Category(name: "eight"),
+            Category(name: "すべて"),
+            Category(name: "イス"),
+            Category(name: "テーブル"),
+            Category(name: "ソファ"),
+            Category(name: "カーペット"),
+            Category(name: "タンス")
         ]
     }
     
     private func setupCollectionView(_ collectionView: UICollectionView) {
+        collectionView.delegate = self
         collectionView.collectionViewLayout = createLayout()
     }
     
@@ -100,11 +117,26 @@ extension ViewController {
         }
     }
     
-    private func performCategoryQuery() {
+    private func performQuery() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
         snapshot.appendSections([.category, .main])
         snapshot.appendItems(categories, toSection: .category)
         snapshot.appendItems(products, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func performFilterQuery(with filter: String) {
+        var filterProducts: [Product] = []
+        if filter == "すべて" {
+            filterProducts = products
+        } else {
+            filterProducts = products.filter { $0.name == filter }
+        }
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, AnyHashable>()
+        snapshot.appendSections([.category, .main])
+        snapshot.appendItems(categories, toSection: .category)
+        snapshot.appendItems(filterProducts, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
@@ -177,6 +209,20 @@ extension ViewController {
         section.contentInsets = .init(top: 10, leading: 5, bottom: 20, trailing: 5)
 
         return section
+    }
+    
+}
+
+extension ViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let category = dataSource.itemIdentifier(for: indexPath) as? Category {
+            performFilterQuery(with: category.name)
+        }
+        
+        if let product = dataSource.itemIdentifier(for: indexPath) as? Product {
+            print(product.name)
+        }
     }
     
 }
